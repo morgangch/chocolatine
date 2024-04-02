@@ -2,18 +2,23 @@ name: chocolatine
 
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+      - "ga-ignore-*"
+
+env:
+  MIRROR_URL: "git@github.com:EpitechPromo2028/B-DOP-200-MPL-2-1-chocolatine-morgan.guichard"
 
 jobs:
   mirror:
-    runs-on: ubuntu-latest
     name: Mirror repository
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - with:
+        with:
           fetch-depth: 0
       - uses: pixta-dev/repository-mirroring-action@v1
         with:
-          target-repo-url: git@github.com:EpitechPromo2028/B-DOP-200-MPL-2-1-chocolatine-morgan.guichard
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          target-repo-url:
+            ${{ env.MIRROR_URL }}
+          ssh-private-key: 
+            ${{ secrets.SSH_PRIVATE_KEY }}
