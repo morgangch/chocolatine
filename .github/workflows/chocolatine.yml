@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - uses: pixta-dev/repository-mirroring-action@v1
         with:
-          target-repo-url:
+          target_repo_url:
             ${{ env.MIRROR_URL }}
-          ssh-private-key: 
+          ssh_private_key: 
             ${{ secrets.SSH_PRIVATE_KEY }}
