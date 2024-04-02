@@ -8,11 +8,11 @@ on:
 jobs:
   mirror:
     runs-on: ubuntu-latest
+    name: Mirror repository
     steps:
-      - name: Checkout source code
       - uses: actions/checkout@v4
-
-      - name: Push to destination repository
+      - with:
+          fetch-depth: 0
       - uses: pixta-dev/repository-mirroring-action@v1
         with:
           target-repo-url: git@github.com:EpitechPromo2028/B-DOP-200-MPL-2-1-chocolatine-morgan.guichard
