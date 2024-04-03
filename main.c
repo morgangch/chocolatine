@@ -20,6 +20,6 @@ int main(int ac, char **av)
         printf("USAGE\n\tTHIS IS A SOKOBAN GAME\n");
         return 0;
     }
-    
+
     return (0);
 }
