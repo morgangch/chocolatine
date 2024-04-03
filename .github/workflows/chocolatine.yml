@@ -9,12 +9,8 @@ on:
       - 'ga-ignore-*'
 
 jobs:
-  check_repo:
-    if: ${{ github.repository == 'morgangch/chocolatine' }}
-    name: "Check repository"
-    runs-on: ubuntu-latest
-
   check_coding_style:
+    if: ${{ github.repository == 'morgangch/chocolatine' }}
     needs: check_repo
     name: "Use coding_style_checker"
     runs-on: ubuntu-latest
