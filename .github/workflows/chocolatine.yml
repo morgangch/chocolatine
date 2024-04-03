@@ -9,8 +9,13 @@ on:
       - 'ga-ignore-*'
 
 jobs:
-  check_coding_style:
+  check_repo:
     if: ${{ github.repository == 'morgangch/chocolatine' }}
+    name: "Check repository"
+    runs-on: ubuntu-latest
+
+  check_coding_style:
+    needs: check_repo
     name: "Use coding_style_checker"
     runs-on: ubuntu-latest
     container: ghcr.io/epitech/coding-style-checker:latest
