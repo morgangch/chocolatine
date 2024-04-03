@@ -10,7 +10,7 @@ on:
 
 jobs:
   check_coding_style:
-    if: ${{ $GITHUB_REPOSITORY == "morgangch/chocolatine" }}
+    if: ${{ "$GITHUB_REPOSITORY" == "morgangch/chocolatine" }}
     name: "Use coding_style_checker"
     runs-on: ubuntu-latest
     container: ghcr.io/epitech/coding-style-checker:latest
