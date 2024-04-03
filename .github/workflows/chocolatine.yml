@@ -10,7 +10,7 @@ on:
 
 jobs:
   check_coding_style:
-    if: ${{ "$GITHUB_REPOSITORY" == "morgangch/chocolatine" }}
+    if: ${{ github.repository == 'morgangch/chocolatine' }}
     name: "Use coding_style_checker"
     runs-on: ubuntu-latest
     container: ghcr.io/epitech/coding-style-checker:latest
@@ -30,7 +30,5 @@ jobs:
           fetch-depth: 0
       - uses: pixta-dev/repository-mirroring-action@v1
         with:
-          target_repo_url:
-            ${{ vars.MIRROR_URL }}
-          ssh_private_key: 
-            ${{ secrets.SSH_PRIVATE_KEY }}
+          target_repo_url: ${{ vars.MIRROR_URL }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
