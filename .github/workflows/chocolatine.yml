@@ -33,8 +33,9 @@ jobs:
           check.sh $(pwd) $(pwd)
 
   push_to_mirror:
+    needs: [check_coding_style]
+    if: ${{ github.event_name == 'push' && github.actor != 'github-actions[bot]' && needs.setup.outputs.ignore != 'false' }}
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
         with:
