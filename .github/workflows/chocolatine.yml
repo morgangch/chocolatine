@@ -19,9 +19,76 @@ jobs:
       - id: check_coding_style
         run: |
           check.sh $(pwd) $(pwd)
+          CODING_STYLE_ERRORS=$(cat $(pwd)/coding-style-reports.log)
+          for ERRORS in $CODING_STYLE_ERRORS; do
+            array=(`echo $ERRORS | sed 's/:/\n/g'`)
+            echo "::error file=${array[1]#./},title=${array[3]#./} coding style errors detected: ${array[2]#./}::${array[4]#./}"
+          done
+          if [[ -n $CODING_STYLE_ERRORS ]]
+          then
+            exit 1
+          else
+            echo No coding style errors detected
+          fi
+  
+
+  check_repo:
+    if: ${{ github.repository == 'morgangch/chocolatine' }}
+    name: "Checks if the repository is clean and void of any unwanted files (temp files, binary files, etc.)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: check_repo
+        run: |
+          UNWANTED_FILES=$(find . -type f -not -path "./git/*" -wholename "*tmp/*" -or -name "*~" -or -name "*.o" -or -name "*.so" -or -name "*.gcno" -or -name "*.gcda" -or -name "*#" -or -name "#*" -or -name "*.gcov" -or -name "*pain_au_chocolat*")
+          for FILES in $UNWANTED_FILES; do
+            echo "::error file=${FILES#./},title=Unwanted file detected::${FILES#./}"
+          done
+          if [[ -n $UNWANTED_FILES ]]
+          then
+            exit 1
+          else
+            echo No unwanted files detected
+          fi
+
+  check_program_compilation:
+    if: ${{ github.repository == 'morgangch/chocolatine' }}
+    needs: [check_repo]
+    name: "Checks if make compil and test all binary listed in the ARGUMENTS variable"
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: check_program_compilation
+        run: make
+        timeout-minutes: 2
+      - run: make clean
+      - run: |
+          OIFS=$IFS
+          IFS=','
+          for x in $EXECUTABLES
+            do
+              ./$x $ARGUMENTS
+            done
+          IFS=$OIFS
+
+  run_tests:
+    needs: [check_program_compilation]
+    name: "Runs tests with criterion"
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: run_tests
+        run: make tests_run
+        timeout-minutes: 2
 
   push_to_mirror:
-    needs: check_coding_style
+    needs: [check_coding_style, run_tests, check_repo, check_program_compilation]
     if: ${{ github.event_name == 'push' && github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     steps:
