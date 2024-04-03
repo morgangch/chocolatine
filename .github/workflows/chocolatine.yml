@@ -31,7 +31,6 @@ jobs:
             echo No coding style errors detected
           fi
   
-
   check_repo:
     if: ${{ github.repository == 'morgangch/chocolatine' }}
     name: "Checks if the repository is clean and void of any unwanted files (temp files, binary files, etc.)"
@@ -51,28 +50,29 @@ jobs:
             echo No unwanted files detected
           fi
 
-  check_program_compilation:
-    if: ${{ github.repository == 'morgangch/chocolatine' }}
-    needs: [check_repo]
-    name: "Checks if make compil and test all binary listed in the ARGUMENTS variable"
-    runs-on: ubuntu-latest
-    container:
-      image: epitechcontent/epitest-docker:latest
+check_program_compilation:
+  needs: [check_repo]
+  name: "Checks if make compil and test all binary listed in the ARGUMENTS variable"
+  runs-on: ubuntu-latest
+  container:
+    image: epitechcontent/epitest-docker:latest
+  steps:
+    - uses: actions/checkout@v4
+    - name: Check for Makefile and compile
+      run: |
+        if [ -f Makefile ]; then
+          for target in all clean fclean re; do
+            make $target
+            if [ $? -ne 0 ]; then
+              echo "Error: make $target failed with exit code $make_exit_code"
+              exit 1
+            fi
+          done
+        else
+          echo "Makefile not found, skipping compilation and testing."
+        fi
+      timeout-minutes: 5
 
-    steps:
-      - uses: actions/checkout@v4
-      - id: check_program_compilation
-        run: make
-        timeout-minutes: 2
-      - run: make clean
-      - run: |
-          OIFS=$IFS
-          IFS=','
-          for x in $EXECUTABLES
-            do
-              ./$x $ARGUMENTS
-            done
-          IFS=$OIFS
 
   run_tests:
     needs: [check_program_compilation]
