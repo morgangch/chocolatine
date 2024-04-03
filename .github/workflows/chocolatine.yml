@@ -23,12 +23,14 @@ jobs:
           fi
 
   check_coding_style:
-    needs: no_test_job
+    name: "Use coding_style_checker"
+    runs-on: ubuntu-latest
     container: ghcr.io/epitech/coding-style-checker:latest
     steps:
-      - name: Check coding style
+      - uses: actions/checkout@v4
+      - id: check_coding_style
         run: |
-            check.sh $PWD $PWD
+          check.sh $(pwd) $(pwd)
 
   check_program_compilation:
     needs: check_coding_style
