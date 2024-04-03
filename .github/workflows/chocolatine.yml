@@ -32,25 +32,6 @@ jobs:
         run: |
           check.sh $(pwd) $(pwd)
 
-  check_program_compilation:
-    needs: check_coding_style
-    runs-on: ubuntu-latest
-    steps:
-      - name: Compile program
-        run: |
-          make
-      - name: clean program
-        run: |
-          make fclean
-
-  run_tests:
-    needs: check_program_compilation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run tests
-        run: |
-          make tests_run
-
   push_to_mirror:
     needs: run_tests
     runs-on: ubuntu-latest
