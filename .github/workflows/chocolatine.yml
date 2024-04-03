@@ -14,9 +14,9 @@ jobs:
     steps:
       - name: Check repository
         run: |
-          if [ "$GITHUB_REPOSITORY" != "chocolatine" ]; then
+          if [ "$GITHUB_REPOSITORY" != "morgangch/chocolatine" ]; then
             echo "Already in the bakery: $GITHUB_REPOSITORY"
-            exit 0
+            exit 1
           fi
 
   check_coding_style:
