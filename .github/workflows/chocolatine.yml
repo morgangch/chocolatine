@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Check coding style
         run: |
-            coding-style.sh $PWD $PWD
+            $PWD/coding-style.sh $PWD $PWD
 
   check_program_compilation:
     needs: check_coding_style
