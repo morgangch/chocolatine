@@ -10,7 +10,7 @@ on:
 
 jobs:
   check_coding_style:
-    if: ${{ github.repository == 'morgangch/chocolatine' }}
+    if: ${{ github.repository == 'morgangch/pain_au_chocolat' }}
     name: "Use coding_style_checker"
     runs-on: ubuntu-latest
     container: ghcr.io/epitech/coding-style-checker:latest
@@ -32,7 +32,7 @@ jobs:
           fi
   
   check_repo:
-    if: ${{ github.repository == 'morgangch/chocolatine' }}
+    if: ${{ github.repository == 'morgangch/pain_au_chocolat' }}
     name: "Checks if the repository is clean and void of any unwanted files (temp files, binary files, etc.)"
     runs-on: ubuntu-latest
     steps:
